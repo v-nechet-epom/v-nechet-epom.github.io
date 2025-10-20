@@ -1,501 +1,312 @@
 <!DOCTYPE html>
 <html lang="uk">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Курс Angular + TypeScript (2 місяці) — збереження у файл</title>
-    <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Angular + TypeScript — Курс (Apple Style)</title>
+<style>
+    :root {
+        --bg: #ffffff;
+        --card: #ffffff;
+        --text: #111111;
+        --subtle: #6e6e73;
+        --border: rgba(0, 0, 0, .08);
+        --shadow: 0 6px 18px rgba(0, 0, 0, .08);
+        --accent: #0071e3;
+        --accent-2: #0a84ff;
+        --success: #34c759;
+    }
+
+    @media (prefers-color-scheme:dark) {
         :root {
-            --bg: #0f111a;
-            --bg-card: #1a1c25;
-            --text: #e2e8f0;
-            --muted: #a0aec0;
-            --accent: #3b82f6;
-            --accent2: #60a5fa;
-            --border: #2a2d3a;
-            --success: #22c55e;
-            --danger: #ef4444;
+            --bg: #0b0b0f;
+            --card: #15151a;
+            --text: #f5f5f7;
+            --subtle: #9fa0a6;
+            --border: rgba(255, 255, 255, .08);
+            --shadow: 0 12px 30px rgba(0, 0, 0, .45);
+            --accent: #0a84ff;
+            --accent-2: #409cff;
+            --success: #30d158;
         }
+    }
 
-        * {
-            box-sizing: border-box
-        }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 24px;
+    }
 
-        body {
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 24px
-        }
+    .container {
+        max-width: 960px;
+        margin: auto;
+    }
 
-        h1 {
-            margin: 0 0 6px;
-            text-align: center
-        }
+    .hero {
+        text-align: center;
+        padding: 40px 20px 20px;
+    }
 
-        p.sub {
-            margin: 0 0 18px;
-            text-align: center;
-            color: var(--muted)
-        }
+    h1 {
+        font-size: 42px;
+        font-weight: 700;
+        margin: 0;
+    }
 
-        .toolbar {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 12px 0
-        }
+    .subtitle {
+        color: var(--subtle);
+        font-size: 18px;
+        max-width: 700px;
+        margin: 12px auto;
+    }
 
-        .badge {
-            border: 1px solid var(--border);
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: var(--bg-card);
-            color: var(--muted);
-            font-size: .9em
-        }
+    .toolbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0;
+    }
 
-        .progress-bar {
-            width: 100%;
-            background: var(--border);
-            border-radius: 6px;
-            height: 10px;
-            overflow: hidden;
-            margin: 16px 0
-        }
+    .btn {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--accent);
+        color: #fff;
+    }
 
-        .progress-fill {
-            height: 10px;
-            background: var(--accent);
-            width: 0%;
-            transition: width .35s ease
-        }
+    .btn.secondary {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
 
-        .week {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-            margin: 14px 0;
-            background: var(--bg-card);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
-            transition: transform .2s ease, box-shadow .2s ease;
-            position: relative
-        }
+    .btn:hover {
+        background: var(--accent-2);
+    }
 
-        .week:hover {
-            transform: scale(1.01);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, .3)
-        }
+    .progress {
+        height: 10px;
+        background: rgba(0, 0, 0, .08);
+        border-radius: 999px;
+        overflow: hidden;
+    }
 
-        .week h3 {
-            color: var(--accent2);
-            margin: 0 0 10px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 6px
-        }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        width: 0%;
+        transition: width .3s ease;
+    }
 
-        .week.done {
-            border-color: var(--success);
-            box-shadow: 0 0 10px rgba(34, 197, 94, .35)
+    @media (prefers-color-scheme:dark) {
+        .progress {
+            background: rgba(255, 255, 255, .08);
         }
+    }
 
-        .week.done h3 {
-            color: var(--success)
-        }
+    .week {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        margin: 16px 0;
+        padding: 20px;
+        transition: .2s;
+    }
 
-        .mark-week-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: .8em;
-            background: transparent;
-            color: var(--accent2);
-            border: 1px solid var(--accent);
-            border-radius: 8px;
-            padding: 6px 10px;
-            cursor: pointer;
-            transition: .25s
-        }
+    .week.done {
+        border-color: rgba(52, 199, 89, .6);
+    }
 
-        .mark-week-btn:hover {
-            background: var(--accent);
-            color: #fff
-        }
+    .week h3 {
+        margin: 0 0 12px;
+        font-size: 20px;
+    }
 
-        .lesson {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 6px 0;
-            padding: 7px;
-            border-left: 3px solid transparent;
-            border-radius: 6px;
-            transition: background .2s ease, border-color .2s ease
-        }
+    .lesson {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 6px 0;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
 
-        .lesson:hover {
-            background: rgba(255, 255, 255, .05);
-            border-color: var(--accent)
-        }
+    .lesson.done {
+        border-color: rgba(52, 199, 89, .6);
+    }
 
-        .lesson input[type="checkbox"] {
-            transform: scale(1.25);
-            cursor: pointer;
-            accent-color: var(--accent)
-        }
+    .lesson label {
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
 
-        .lesson.done label {
-            text-decoration: line-through;
-            color: #71717a
-        }
+    .lesson input[type="checkbox"] {
+        accent-color: var(--accent);
+        transform: scale(1.2);
+    }
 
-        .lesson.done {
-            border-left-color: var(--success)
-        }
-
-        .task {
-            font-size: .92em;
-            color: #a1a1aa;
-            margin-left: 35px;
-            margin-bottom: 6px
-        }
-
-        button {
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text);
-            cursor: pointer
-        }
-
-        button.primary {
-            background: var(--accent);
-            border: none
-        }
-
-        button.primary:hover {
-            background: var(--accent2)
-        }
-
-        input[type="file"] {
-            display: none
-        }
-    </style>
+    .task {
+        margin-left: 32px;
+        font-size: 14px;
+        color: var(--subtle);
+    }
+</style>
 </head>
 
 <body>
-    <h1>🅰️ Курс Angular + TypeScript — 2 місяці</h1>
-    <p class="sub">Мета: створити застосунок <b>TaskFlow</b> — менеджер задач із формами, сигналами, сервісами, пайпами
-        та локальним збереженням.</p>
-
-    <div class="toolbar">
-        <span class="badge" id="saveStatus">Файл: не вибрано</span>
-        <button class="primary" onclick="resetProgress()">Скинути прогрес</button>
-        <button onclick="exportJSON()">Експорт JSON</button>
-        <label for="importFile" class="primary" style="cursor:pointer;">Імпорт JSON</label>
-        <input id="importFile" type="file" accept="application/json" />
-        <button onclick="chooseFile()">Обрати файл для автозбереження</button>
-        <button onclick="clearFile()">Відв’язати файл</button>
+    <div class="container">
+        <div class="hero">
+            <h1>Angular + TypeScript</h1>
+            <p class="subtitle">2-місячний курс із практикою — створення застосунку <b>TaskFlow</b>.</p>
+        </div>
+        <div class="toolbar">
+            <button class="btn secondary" onclick="resetProgress()">Скинути прогрес</button>
+            <span id="status"></span>
+        </div>
+        <div class="progress">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div id="course"></div>
     </div>
-
-    <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div id="course"></div>
 
     <script>
-        /* ---------- Дані курсу ---------- */
+        /* ===== ДАНІ КУРСУ ===== */
         const course = [
             {
                 week: "Тиждень 1 — Вступ, TypeScript, перший компонент", lessons: [
-                    ["Що таке Angular, чому він стабільний і навіщо його використовувати", "Створи конспект у README.md — коротко про Angular, його історію та переваги."],
-                    ["Встановлення Node.js, Angular CLI, створення першого проєкту", "Ініціалізуй проект TaskFlow через Angular CLI."],
-                    ["Огляд структури проєкту, компонентів і модуля", "Проаналізуй створені файли, знайди AppComponent."],
-                    ["Створення та підключення власного компонента", "Додай компонент <code>HeaderComponent</code> з назвою TaskFlow."],
-                    ["Основи TypeScript: типи, інтерфейси, класи", "Створи модель <code>Task</code> з інтерфейсом {id,title,description,status}."]
+                    ["Що таке Angular, чому він стабільний і навіщо його використовувати", "Створи конспект у README.md — коротко про Angular, його історію та переваги.", false],
+                    ["Встановлення Node.js, Angular CLI, створення першого проєкту", "Ініціалізуй проект TaskFlow через Angular CLI.", false],
+                    ["Огляд структури проєкту, компонентів і модуля", "Проаналізуй створені файли, знайди AppComponent.", false],
+                    ["Створення та підключення власного компонента", "Додай компонент <code>HeaderComponent</code> з назвою TaskFlow.", false],
+                    ["Основи TypeScript: типи, інтерфейси, класи", "Створи модель <code>Task</code> з інтерфейсом {id, title, description, status}.", false]
                 ]
             },
             {
                 week: "Тиждень 2 — Зв’язування даних, події, динамічний контент", lessons: [
-                    ["Інтерполяція, прив’язка властивостей та атрибутів", "Виведи список тестових задач у шаблоні з *ngFor."],
-                    ["Обробка подій (Event Binding)", "Додай кнопку для зміни статусу задачі та оброби подію."],
-                    ["Двостороннє зв’язування (ngModel)", "Додай форму створення нової задачі з двостороннім зв’язуванням."],
-                    ["Сигнали в Angular 19", "Заміни локальний стан на Signals для зберігання задач."],
-                    ["Практика", "Реалізуй додавання задач у список із формою та сигналами."]
+                    ["Інтерполяція, прив’язка властивостей та атрибутів", "Виведи список тестових задач у шаблоні з *ngFor.", false],
+                    ["Обробка подій (Event Binding)", "Додай кнопку для зміни статусу задачі та оброби подію.", false],
+                    ["Двостороннє зв’язування (ngModel)", "Додай форму створення нової задачі з двостороннім зв’язуванням.", false],
+                    ["Сигнали в Angular 19", "Заміни локальний стан на Signals для зберігання задач.", false],
+                    ["Практика", "Реалізуй додавання задач у список із формою та сигналами.", false]
                 ]
             },
             {
                 week: "Тиждень 3 — Компоненти, Input/Output, комунікація", lessons: [
-                    ["Передача даних у компонент (Input)", "Передай задачу у дочірній компонент <code>TaskItemComponent</code>."],
-                    ["Відправлення подій нагору (Output)", "Зроби видалення задачі через подію з дочірнього компонента."],
-                    ["Обчислювані властивості (Getters)", "Додай вивід кількості завершених задач."],
-                    ["Динамічне стилювання", "Познач завершені задачі зеленим кольором через клас binding."],
-                    ["Практика", "Створи компонент <code>TaskListComponent</code> і реалізуй повну взаємодію."]
+                    ["Передача даних у компонент (Input)", "Передай задачу у дочірній компонент <code>TaskItemComponent</code>.", false],
+                    ["Відправлення подій нагору (Output)", "Зроби видалення задачі через подію з дочірнього компонента.", false],
+                    ["Обчислювані властивості (Getters)", "Додай вивід кількості завершених задач.", false],
+                    ["Динамічне стилювання", "Познач завершені задачі зеленим кольором через клас binding.", false],
+                    ["Практика", "Створи компонент <code>TaskListComponent</code> і реалізуй повну взаємодію.", false]
                 ]
             },
             {
                 week: "Тиждень 4 — Форми, двостороннє зв’язування, Pipes", lessons: [
-                    ["Шаблонні форми Angular", "Додай форму для додавання задачі через шаблонну форму."],
-                    ["Валідація форм", "Додай обов’язковість полів назви та опису."],
-                    ["Pipes — форматування даних", "Додай pipe для обрізання опису."],
-                    ["Кастомні Pipes", "Створи pipe для фільтрації завершених задач."],
-                    ["Практика", "Реалізуй фільтр 'Показати лише активні'."]
+                    ["Шаблонні форми Angular", "Додай форму для додавання задачі через шаблонну форму.", false],
+                    ["Валідація форм", "Додай обов’язковість полів назви та опису.", false],
+                    ["Pipes — форматування даних", "Додай pipe для форматування тексту (обрізання опису).", false],
+                    ["Кастомні Pipes", "Створи власний pipe для фільтрації завершених задач.", false],
+                    ["Практика", "Реалізуй фільтр 'Показати лише активні задачі'.", false]
                 ]
             },
             {
                 week: "Тиждень 5 — Сервіси та Dependency Injection", lessons: [
-                    ["Що таке сервіс та як його створити", "Створи <code>TaskService</code> для управління задачами."],
-                    ["Dependency Injection", "Інжектуй сервіс у TaskListComponent."],
-                    ["Сигнали у сервісах", "Перенеси логіку сигналів у сервіс."],
-                    ["Використання localStorage", "Синхронізуй задачі з localStorage у сервісі."],
-                    ["Практика", "Перевір збереження задач після перезавантаження."]
+                    ["Що таке сервіс та як його створити", "Створи <code>TaskService</code> для управління задачами.", false],
+                    ["Dependency Injection", "Інжектуй сервіс у компонент TaskListComponent.", false],
+                    ["Сигнали у сервісах", "Перенеси логіку сигналів у сервіс.", false],
+                    ["Використання localStorage", "Збережи задачі у localStorage через сервіс.", false],
+                    ["Практика", "Перевір збереження задач після перезавантаження сторінки.", false]
                 ]
             },
             {
-                week: "Тиждень 6 — Модулі, архітектура, структура", lessons: [
-                    ["Що таке модулі (NgModule)", "Створи <code>TaskModule</code> і перенеси компоненти."],
-                    ["SharedModule", "Винеси спільні компоненти та пайпи."],
-                    ["Структура директорій", "Розклади код за фічами (core/shared/features)."],
-                    ["Standalone Components", "Переведи дрібні компоненти у standalone."],
-                    ["Практика", "Онови імпорти/експорти згідно з best practices."]
+                week: "Тиждень 6 — Модулі, архітектура, структура проєкту", lessons: [
+                    ["Що таке модулі (NgModule)", "Створи <code>TaskModule</code> і перенеси туди компоненти задач.", false],
+                    ["SharedModule", "Винеси спільні компоненти та пайпи у спільний модуль.", false],
+                    ["Структура директорій", "Розклади код за фічами (core, shared, features).", false],
+                    ["Оптимізація імпортів", "Використай Standalone Components для деяких елементів.", false],
+                    ["Практика", "Онови структуру проєкту згідно з найкращими практиками.", false]
                 ]
             },
             {
-                week: "Тиждень 7 — Директиви, життєвий цикл", lessons: [
-                    ["Кастомні директиви", "Створи директиву підсвічування активної задачі."],
-                    ["Життєвий цикл компонентів", "Ініціалізуй дані з localStorage у ngOnInit."],
-                    ["ViewChild і доступ до DOM", "Отримай посилання на контейнер списку."],
-                    ["HostListener/HostBinding", "Додай ефекти наведення на елемент задачі."],
-                    ["Практика", "Увімкни автозбереження при зміні стану."]
+                week: "Тиждень 7 — Директиви, життєвий цикл компонентів", lessons: [
+                    ["Кастомні директиви", "Створи директиву для підсвічування активної задачі.", false],
+                    ["Життєвий цикл компонентів", "Використай ngOnInit для ініціалізації даних із localStorage.", false],
+                    ["ViewChild і доступ до DOM", "Отримай посилання на елемент списку задач.", false],
+                    ["HostListener та HostBinding", "Додай анімацію при наведенні на задачу.", false],
+                    ["Практика", "Додай логіку автозбереження задач при зміні стану.", false]
                 ]
             },
             {
                 week: "Тиждень 8 — Оптимізація, OnPush, AsyncPipe, фінал", lessons: [
-                    ["Change Detection та OnPush стратегія", "Переведи компонент списку задач на OnPush."],
-                    ["AsyncPipe", "Використай AsyncPipe для відображення даних сервісу."],
-                    ["Рефакторинг застосунку", "Перевір типи, перейменуй змінні, прибери дублікати коду."],
-                    ["Деплой", "Збери застосунок через ng build і завантаж на GitHub Pages."],
-                    ["Підсумок", "Опиши в README основні здобуті навички."]
+                    ["Change Detection та OnPush стратегія", "Переведи компонент списку задач на OnPush.", false],
+                    ["AsyncPipe", "Використай AsyncPipe для відображення даних сервісу.", false],
+                    ["Рефакторинг застосунку", "Перевір типи, перейменуй змінні, прибери дублікати коду.", false],
+                    ["Деплой", "Збери застосунок через ng build і завантаж на GitHub Pages.", false],
+                    ["Підсумок", "Опиши в README основні здобуті навички.", false]
                 ]
             }
         ];
 
-        /* ---------- Рендер ---------- */
+        /* ===== РЕНДЕР ===== */
         function loadCourse() {
-            const container = document.getElementById('course');
-            container.innerHTML = '';
+            const container = document.getElementById('course'); container.innerHTML = '';
             course.forEach((week, i) => {
-                const div = document.createElement('div');
-                const weekId = `week-${i}`;
-                const isWeekDone = getFlag(weekId);
-
-                div.className = 'week' + (isWeekDone ? ' done' : '');
-                div.innerHTML = `
-      <h3>${week.week}</h3>
-      <button class="mark-week-btn" onclick="toggleWeek('${weekId}')">${isWeekDone ? '✅ Завершено' : 'Позначити як виконано'}</button>
-      ${week.lessons.map((l, j) => {
+                const wId = `week-${i}`;
+                const wDone = localStorage.getItem(wId) === '1';
+                const weekEl = document.createElement('div');
+                weekEl.className = 'week' + (wDone ? ' done' : '');
+                weekEl.innerHTML = `<h3>${week.week}</h3>`;
+                week.lessons.forEach((l, j) => {
                     const id = `w${i}-l${j}`;
-                    const done = getFlag(id);
-                    return `
-        <div class="lesson ${done ? 'done' : ''}">
-          <input type="checkbox" id="${id}" ${done ? 'checked' : ''} onchange="toggleLesson('${id}')">
-          <label for="${id}">${l[0]}</label>
-        </div>
-        <div class="task"><b>Завдання:</b> ${l[1]}</div>`;
-                }).join('')}
-    `;
-                container.appendChild(div);
+                    const stored = localStorage.getItem(id) === '1';
+                    const done = stored || l[2] === true;
+                    const lesson = document.createElement('div');
+                    lesson.className = 'lesson' + (done ? ' done' : '');
+                    lesson.innerHTML = `<input type="checkbox" id="${id}" ${done ? 'checked' : ''}
+        onchange="toggleLesson('${id}',${i},${j})"><label for="${id}">${l[0]}</label>`;
+                    const task = document.createElement('div');
+                    task.className = 'task'; task.innerHTML = `<b>Завдання:</b> ${l[1]}`;
+                    weekEl.append(lesson, task);
+                    // обновим массив текущим состоянием
+                    week.lessons[j][2] = done;
+                });
+                container.appendChild(weekEl);
             });
             updateProgress();
         }
 
-        /* ---------- Локальне сховище ---------- */
-        function getFlag(key) { return localStorage.getItem(key) === '1'; }
-        function setFlag(key, val) { if (val) { localStorage.setItem(key, '1') } else { localStorage.removeItem(key) } }
-
-        /* ---------- Тогли ---------- */
-        function toggleLesson(id) {
-            const el = document.getElementById(id);
-            const label = el.nextElementSibling;
-            setFlag(id, el.checked);
-            label.parentElement.classList.toggle('done', el.checked);
+        /* ===== ЛОГІКА ПРОГРЕСУ ===== */
+        function toggleLesson(id, i, j) {
+            const cb = document.getElementById(id);
+            const row = cb.closest('.lesson');
+            const done = cb.checked;
+            row.classList.toggle('done', done);
+            localStorage.setItem(id, done ? '1' : '0');
+            course[i].lessons[j][2] = done;
             updateProgress();
-            saveIfFileChosen();
         }
-        function toggleWeek(weekId) {
-            const btn = document.querySelector(`[onclick="toggleWeek('${weekId}')"]`);
-            const weekDiv = btn.closest('.week');
-            const done = !getFlag(weekId);
-            setFlag(weekId, done);
-            weekDiv.classList.toggle('done', done);
-            btn.textContent = done ? '✅ Завершено' : 'Позначити як виконано';
-            updateProgress();
-            saveIfFileChosen();
-        }
-
-        /* ---------- Прогрес ---------- */
         function updateProgress() {
-            const totalLessons = document.querySelectorAll('input[type="checkbox"]').length;
-            const doneLessons = document.querySelectorAll('input[type="checkbox"]:checked').length;
-            const totalWeeks = course.length;
-            let doneWeeks = 0;
-            for (let i = 0; i < totalWeeks; i++) { if (getFlag(`week-${i}`)) doneWeeks++; }
-            const total = totalLessons + totalWeeks;
-            const done = doneLessons + doneWeeks;
-            const percent = total ? (done / total) * 100 : 0;
+            let total = 0, done = 0;
+            course.forEach(w => w.lessons.forEach(l => { total++; if (l[2]) done++; }));
+            const percent = Math.round(done / total * 100);
             document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('status').textContent = `Пройдено: ${percent}%`;
         }
-
-        /* ---------- Експорт / Імпорт JSON ---------- */
-        function getProgressData() {
-            const data = { weeks: [], lessons: {}, version: 1, updatedAt: new Date().toISOString() };
-            course.forEach((w, wi) => {
-                data.weeks[wi] = getFlag(`week-${wi}`);
-                w.lessons.forEach((_, li) => {
-                    const id = `w${wi}-l${li}`;
-                    data.lessons[id] = getFlag(id);
-                });
-            });
-            return data;
-        }
-        function applyProgressData(data) {
-            // Очистити все, потім виставити за даними
-            Object.keys(localStorage).forEach(k => {
-                if (k.startsWith('week-') || k.startsWith('w')) localStorage.removeItem(k);
-            });
-            (data.weeks || []).forEach((v, wi) => setFlag(`week-${wi}`, !!v));
-            if (data.lessons) {
-                Object.entries(data.lessons).forEach(([k, v]) => setFlag(k, !!v));
-            }
-            loadCourse();
-        }
-        function exportJSON() {
-            const blob = new Blob([JSON.stringify(getProgressData(), null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'progress.json';
-            document.body.appendChild(a); a.click();
-            a.remove(); URL.revokeObjectURL(url);
-        }
-        document.getElementById('importFile').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            try {
-                const txt = await file.text();
-                const data = JSON.parse(txt);
-                applyProgressData(data);
-                saveIfFileChosen(); // одразу зберегти у вибраний файл, якщо налаштовано
-            } catch (err) {
-                alert('Не вдалося імпортувати JSON: ' + err.message);
-            } finally {
-                e.target.value = '';
-            }
-        });
-
-        /* ---------- Автозбереження у локальний файл (File System Access API) ---------- */
-        let fileHandle = null;
-        const HANDLE_KEY = 'progressFileHandle'; // збережемо дескриптор (якщо браузер дозволяє)
-
-        async function chooseFile() {
-            if (!('showSaveFilePicker' in window)) {
-                alert('Ваш браузер не підтримує File System Access API. Доступно у Chromium-браузерах.');
-                return;
-            }
-            try {
-                fileHandle = await window.showSaveFilePicker({
-                    suggestedName: 'progress.json',
-                    types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
-                });
-                await persistHandle(fileHandle);
-                await writeToFile(); // первинний запис
-                updateSaveStatus();
-            } catch (e) {
-                if (e.name !== 'AbortError') alert('Помилка вибору файлу: ' + e.message);
-            }
-        }
-        function clearFile() {
-            fileHandle = null;
-            localStorage.removeItem(HANDLE_KEY);
-            updateSaveStatus();
-        }
-        function updateSaveStatus() {
-            const el = document.getElementById('saveStatus');
-            if (fileHandle) el.textContent = 'Файл: підключено';
-            else el.textContent = 'Файл: не вибрано';
-        }
-
-        async function persistHandle(handle) {
-            // Серіалізація дескриптора (працює у Chromium)
-            if ('serializable' in FileSystemHandle.prototype || handle) {
-                try {
-                    const serialized = await handle.serialize();
-                    localStorage.setItem(HANDLE_KEY, JSON.stringify(serialized));
-                } catch (e) {
-                    // якщо серіалізація недоступна — просто ігноруємо
-                }
-            }
-        }
-        async function restoreHandle() {
-            const raw = localStorage.getItem(HANDLE_KEY);
-            if (!raw) return;
-            try {
-                const serialized = JSON.parse(raw);
-                if ('deserialize' in window) {
-                    fileHandle = await window.deserialize(serialized);
-                }
-            } catch (e) {
-                // не вдалося відновити — приберемо ключ
-                localStorage.removeItem(HANDLE_KEY);
-            }
-        }
-        async function verifyPermission(handle, mode = 'readwrite') {
-            const opts = { mode };
-            if ((await handle.queryPermission(opts)) === 'granted') return true;
-            if ((await handle.requestPermission(opts)) === 'granted') return true;
-            return false;
-        }
-        async function writeToFile() {
-            if (!fileHandle) return;
-            try {
-                if (!(await verifyPermission(fileHandle, 'readwrite'))) {
-                    alert('Немає дозволу на запис у файл.');
-                    return;
-                }
-                const writable = await fileHandle.createWritable();
-                await writable.write(JSON.stringify(getProgressData(), null, 2));
-                await writable.close();
-            } catch (e) {
-                console.warn('Не вдалося записати файл:', e);
-            }
-        }
-        function saveIfFileChosen() {
-            // викликати після кожної зміни
-            if (fileHandle) writeToFile();
-        }
-
-        /* ---------- Скидання ---------- */
         function resetProgress() {
-            if (confirm('Скинути увесь прогрес?')) {
-                Object.keys(localStorage).forEach(k => {
-                    if (k.startsWith('week-') || k.startsWith('w') || k === HANDLE_KEY) localStorage.removeItem(k);
-                });
-                fileHandle = null;
-                loadCourse();
-                updateSaveStatus();
-            }
+            if (!confirm('Скинути прогрес?')) return;
+            course.forEach(w => w.lessons.forEach(l => l[2] = false));
+            localStorage.clear(); loadCourse();
         }
-
-        /* ---------- Старт ---------- */
-        window.addEventListener('load', async () => {
-            await restoreHandle();
-            loadCourse();
-            updateSaveStatus();
-        });
+        window.addEventListener('load', loadCourse);
     </script>
 </body>
 
