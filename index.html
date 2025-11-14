@@ -1,312 +1,925 @@
 <!DOCTYPE html>
 <html lang="uk">
 
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Angular + TypeScript — Курс (Apple Style)</title>
-<style>
-    :root {
-        --bg: #ffffff;
-        --card: #ffffff;
-        --text: #111111;
-        --subtle: #6e6e73;
-        --border: rgba(0, 0, 0, .08);
-        --shadow: 0 6px 18px rgba(0, 0, 0, .08);
-        --accent: #0071e3;
-        --accent-2: #0a84ff;
-        --success: #34c759;
-    }
-
-    @media (prefers-color-scheme:dark) {
+<head>
+    <meta charset="UTF-8" />
+    <title>Курс: TypeScript + Angular</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
         :root {
-            --bg: #0b0b0f;
-            --card: #15151a;
+            --bg: #050509;
+            --card-bg: #111118;
+            --border: #262637;
+            --border-soft: #1a1a25;
             --text: #f5f5f7;
-            --subtle: #9fa0a6;
-            --border: rgba(255, 255, 255, .08);
-            --shadow: 0 12px 30px rgba(0, 0, 0, .45);
+            --muted: #8e8e93;
             --accent: #0a84ff;
-            --accent-2: #409cff;
-            --success: #30d158;
+            --accent-soft: rgba(10, 132, 255, 0.15);
+            --radius-lg: 16px;
+            --radius-md: 10px;
         }
-    }
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        margin: 0;
-        padding: 24px;
-    }
-
-    .container {
-        max-width: 960px;
-        margin: auto;
-    }
-
-    .hero {
-        text-align: center;
-        padding: 40px 20px 20px;
-    }
-
-    h1 {
-        font-size: 42px;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .subtitle {
-        color: var(--subtle);
-        font-size: 18px;
-        max-width: 700px;
-        margin: 12px auto;
-    }
-
-    .toolbar {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin: 20px 0;
-    }
-
-    .btn {
-        border: none;
-        border-radius: 999px;
-        padding: 10px 18px;
-        font-weight: 600;
-        cursor: pointer;
-        background: var(--accent);
-        color: #fff;
-    }
-
-    .btn.secondary {
-        background: transparent;
-        border: 1px solid var(--border);
-        color: var(--text);
-    }
-
-    .btn:hover {
-        background: var(--accent-2);
-    }
-
-    .progress {
-        height: 10px;
-        background: rgba(0, 0, 0, .08);
-        border-radius: 999px;
-        overflow: hidden;
-    }
-
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--accent), var(--accent-2));
-        width: 0%;
-        transition: width .3s ease;
-    }
-
-    @media (prefers-color-scheme:dark) {
-        .progress {
-            background: rgba(255, 255, 255, .08);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-    }
 
-    .week {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        box-shadow: var(--shadow);
-        margin: 16px 0;
-        padding: 20px;
-        transition: .2s;
-    }
+        html,
+        body {
+            min-height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: radial-gradient(circle at top, #161623 0, #050509 45%, #000 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
 
-    .week.done {
-        border-color: rgba(52, 199, 89, .6);
-    }
+        body {
+            padding: 24px 16px 40px;
+            display: flex;
+            justify-content: center;
+        }
 
-    .week h3 {
-        margin: 0 0 12px;
-        font-size: 20px;
-    }
+        .page {
+            width: 100%;
+            max-width: 780px;
+        }
 
-    .lesson {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 6px 0;
-        padding: 10px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-    }
+        /* Заголовок */
+        header {
+            margin-bottom: 20px;
+            padding: 18px 16px 14px;
+            border-radius: var(--radius-lg);
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+        }
 
-    .lesson.done {
-        border-color: rgba(52, 199, 89, .6);
-    }
+        .eyebrow {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
 
-    .lesson label {
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-    }
+        h1 {
+            font-size: clamp(22px, 3vw, 28px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
 
-    .lesson input[type="checkbox"] {
-        accent-color: var(--accent);
-        transform: scale(1.2);
-    }
+        .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            max-width: 520px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
 
-    .task {
-        margin-left: 32px;
-        font-size: 14px;
-        color: var(--subtle);
-    }
-</style>
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            font-size: 13px;
+            color: var(--muted);
+            align-items: center;
+        }
+
+        .meta-block-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            margin-bottom: 2px;
+        }
+
+        .meta-block-value {
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .badge {
+            margin-left: auto;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .badge {
+                margin-left: 0;
+            }
+        }
+
+        /* Загальний прогрес */
+        .progress-header {
+            margin-bottom: 16px;
+            padding: 14px 16px;
+            border-radius: var(--radius-lg);
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .progress-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .progress-percent {
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: #161625;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.2s ease-out;
+        }
+
+        .progress-note {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Легенда */
+        .legend {
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box {
+            width: 13px;
+            height: 13px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            background: #111118;
+        }
+
+        .legend-box.checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        code {
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+            background: #111118;
+            padding: 1px 6px;
+            border-radius: 999px;
+        }
+
+        /* Модулі (одна колона) */
+        .modules {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .module {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-soft);
+            padding: 14px 16px 10px;
+        }
+
+        .module-header {
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        .module-title {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: baseline;
+        }
+
+        .week-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+        }
+
+        .module-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .module-meta {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .module-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .block {
+            margin-bottom: 4px;
+        }
+
+        .block-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .items {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            background: transparent;
+            font-size: 13px;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .item:hover {
+            background: #151520;
+            border-color: var(--border);
+        }
+
+        .item-label {
+            display: inline-flex;
+            align-items: flex-start;
+            gap: 8px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .item-checkbox {
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .item-text {
+            line-height: 1.35;
+        }
+
+        .item-meta {
+            font-size: 11px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .item.completed {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+        }
+
+        .item.completed .item-meta {
+            color: var(--accent);
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1>Angular + TypeScript</h1>
-            <p class="subtitle">2-місячний курс із практикою — створення застосунку <b>TaskFlow</b>.</p>
-        </div>
-        <div class="toolbar">
-            <button class="btn secondary" onclick="resetProgress()">Скинути прогрес</button>
-            <span id="status"></span>
-        </div>
-        <div class="progress">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <div id="course"></div>
+    <div class="page">
+        <header>
+            <div class="eyebrow">Курс</div>
+            <h1>TypeScript + Angular</h1>
+            <p class="subtitle">
+                План навчання до рівня middle front-end розробника з акцентом на Angular, TypeScript, RxJS, NgRx,
+                Angular Material та командні процеси.
+            </p>
+        </header>
+
+        <section class="progress-header">
+            <div class="progress-top">
+                <div class="progress-title">Загальний прогрес</div>
+                <div class="progress-percent" id="progress-percent">0%</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-note">
+                Відмічай виконані пункти через чекбокси — прогрес зберігається у цьому браузері.
+            </p>
+        </section>
+
+        <main class="modules">
+
+            <section class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span class="module-name">TypeScript: базис + просунутий мінімум</span>
+                    </div>
+                    <div class="module-meta">
+                        TypeScript, типи, generics, type guards
+                    </div>
+                </div>
+
+                <div class="module-body">
+                    <div class="block">
+                        <div class="block-title">Типи та об’єкти</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-1" checked />
+                                    <span class="item-text">Базові типи:
+                                        <code>string | number | boolean | null | undefined</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-2" checked />
+                                    <span class="item-text"><code>any</code> vs <code>unknown</code>, практичний type
+                                        narrowing</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-3" checked />
+                                    <span class="item-text">Інтерфейси та типи: <code>interface</code> /
+                                        <code>type</code>, <code>readonly</code>, optional поля</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-4" />
+                                    <span class="item-text">Наслідування, перетин типів, index&nbsp;signatures</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="block-title">Функції та generics</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-5" />
+                                    <span class="item-text">Функції: перегрузки, колбеки, типізація
+                                        <code>this</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-6" />
+                                    <span class="item-text">Type guards: <code>typeof</code>, <code>instanceof</code>,
+                                        <code>in</code>, кастомні guards</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-7" />
+                                    <span class="item-text">Generics: функції, інтерфейси, <code>extends</code>
+                                        constraints</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w1-8" />
+                                    <span class="item-text">Mapped / conditional types, discriminated&nbsp;unions,
+                                        utility types</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span class="module-name">Angular Core: архітектура та фундамент</span>
+                    </div>
+                    <div class="module-meta">
+                        Компоненти, DI, routing, Reactive Forms
+                    </div>
+                </div>
+
+                <div class="module-body">
+                    <div class="block">
+                        <div class="block-title">Компоненти та DI</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-1" />
+                                    <span class="item-text">Standalone Components, модулі, базова структура
+                                        проєкту</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-2" />
+                                    <span class="item-text">Життєвий цикл компонентів, Change Detection, стратегія
+                                        OnPush</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-3" />
+                                    <span class="item-text">DI: сервіси, провайдери, токени,
+                                        <code>providedIn</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-4" />
+                                    <span class="item-text">Pipes (pure / impure) та їх використання</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="block-title">Routing та форми</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-5" />
+                                    <span class="item-text">Router: lazy loading, guards, resolvers,
+                                        query&nbsp;params</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-6" />
+                                    <span class="item-text">Шаблони: <code>*ngIf</code>, <code>*ngFor</code>,
+                                        <code>ng-container</code>, content projection</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-7" />
+                                    <span class="item-text">Reactive Forms: FormBuilder, sync/async валідатори</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w2-8" />
+                                    <span class="item-text">FormArray: динамічні форми (списки полів)</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span class="module-name">RxJS: стріми, оператори, патерни</span>
+                    </div>
+                    <div class="module-meta">
+                        Оператори, Subject-и, робота з HttpClient
+                    </div>
+                </div>
+
+                <div class="module-body">
+                    <div class="block">
+                        <div class="block-title">Оператори</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-1" />
+                                    <span class="item-text">Перетворення: <code>map</code>, <code>switchMap</code>,
+                                        <code>mergeMap</code>, <code>concatMap</code>, <code>exhaustMap</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-2" />
+                                    <span class="item-text">Фільтрація: <code>filter</code>, <code>take</code>,
+                                        <code>takeUntil</code>, <code>first</code>, <code>debounceTime</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-3" />
+                                    <span class="item-text">Комбінування: <code>combineLatest</code>,
+                                        <code>forkJoin</code>, <code>zip</code>, <code>withLatestFrom</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-4" />
+                                    <span class="item-text">Службові: <code>tap</code>, <code>shareReplay</code>,
+                                        <code>distinctUntilChanged</code>, <code>catchError</code>,
+                                        <code>finalize</code></span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="block-title">Патерни в Angular</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-5" />
+                                    <span class="item-text">Hot vs cold observables, <code>Subject</code> /
+                                        <code>BehaviorSubject</code> / <code>ReplaySubject</code></span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-6" />
+                                    <span class="item-text">HttpClient + RxJS: послідовні та паралельні запити, обробка
+                                        помилок</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-7" />
+                                    <span class="item-text">Відписки: <code>takeUntil</code>, AsyncPipe, шаблонні
+                                        рішення</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w3-8" />
+                                    <span class="item-text">Пошук з debounce, комбінування кількох джерел даних</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span class="module-name">NgRx: керування станом</span>
+                    </div>
+                    <div class="module-meta">
+                        Store, selectors, Effects, EntityAdapter
+                    </div>
+                </div>
+
+                <div class="module-body">
+                    <div class="block">
+                        <div class="block-title">Store та архітектура</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-1" />
+                                    <span class="item-text">Базовий цикл: actions → reducers → selectors →
+                                        effects</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-2" />
+                                    <span class="item-text">Feature-модулі стора, розділення по доменах</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-3" />
+                                    <span class="item-text">NgRx EntityAdapter, нормалізація даних</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-4" />
+                                    <span class="item-text">Селектори, мемоізація, продуктивність</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="block-title">Effects та практики</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-5" />
+                                    <span class="item-text">Effects: запити до API, обробка помилок, retry</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-6" />
+                                    <span class="item-text">Глобальні ефекти: нотифікації, логування</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w4-7" />
+                                    <span class="item-text">Best practices: типізація actions, структура файлів, чистий
+                                        код</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span class="module-name">UI: Angular Material, SCSS, адаптивність</span>
+                    </div>
+                    <div class="module-meta">
+                        Компоненти Material, темізація, SCSS, responsive
+                    </div>
+                </div>
+
+                <div class="module-body">
+                    <div class="block">
+                        <div class="block-title">Angular Material</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-1" />
+                                    <span class="item-text">Form controls, кнопки, навігація, basic layout</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-2" />
+                                    <span class="item-text">Dialog: відкриття, передавання даних, обробка
+                                        результату</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-3" />
+                                    <span class="item-text">Таблиці: сортування, пагінація, фільтрація</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-4" />
+                                    <span class="item-text">Темізація: кастомні теми, типографіка, breakpoints</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="block-title">SCSS та адаптив</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-5" />
+                                    <span class="item-text">Архітектура SCSS, модулі, змінні, міксіни</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-6" />
+                                    <span class="item-text">BEM + компонентний підхід в Angular</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-7" />
+                                    <span class="item-text">Flex/Grid, адаптив під десктоп / планшет / мобайл</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w5-8" />
+                                    <span class="item-text">Bootstrap (grid + utilities) як допоміжний інструмент</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <span class="module-name">Production-рівень, Git, Jira, архітектура</span>
+                    </div>
+                    <div class="module-meta">
+                        Git/Jira/CI, архітектура, фінальний проєкт
+                    </div>
+                </div>
+
+                <div class="module-body">
+                    <div class="block">
+                        <div class="block-title">Процеси та інструменти</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-1" />
+                                    <span class="item-text">Git: feature branches, rebase, squash, code review</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-2" />
+                                    <span class="item-text">Jira: задачі, спринти, story points, acceptance
+                                        criteria</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-3" />
+                                    <span class="item-text">Bitbucket PR, Bamboo (огляд CI/CD), Confluence
+                                        (документація)</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-4" />
+                                    <span class="item-text">Code style: ESLint, Prettier, правила для Angular/TS</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="block-title">Архітектура та фінальний проєкт</div>
+                        <ul class="items">
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-5" />
+                                    <span class="item-text">Smart/Dumb компоненти, Core/Shared модулі, шари
+                                        сервісів</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-6" />
+                                    <span class="item-text">API-шар: DTO, маппери, сувора типізація</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-7" />
+                                    <span class="item-text">Міні-проєкт: Auth, Dashboard, таблиці, фільтри, діалоги,
+                                        NgRx, Material, адаптив</span>
+                                </label>
+                                
+                            </li>
+                            <li class="item">
+                                <label class="item-label">
+                                    <input type="checkbox" class="item-checkbox" data-id="w6-8" />
+                                    <span class="item-text">Рефакторинг, підготовка до співбесід, резюме та
+                                        портфоліо</span>
+                                </label>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
     <script>
-        /* ===== ДАНІ КУРСУ ===== */
-        const course = [
-            {
-                week: "Тиждень 1 — Вступ, TypeScript, перший компонент", lessons: [
-                    ["Що таке Angular, чому він стабільний і навіщо його використовувати", "Створи конспект у README.md — коротко про Angular, його історію та переваги.", true],
-                    ["Встановлення Node.js, Angular CLI, створення першого проєкту", "Ініціалізуй проект TaskFlow через Angular CLI.", true],
-                    ["Огляд структури проєкту, компонентів і модуля", "Проаналізуй створені файли, знайди AppComponent.", true],
-                    ["Створення та підключення власного компонента", "Додай компонент <code>HeaderComponent</code> з назвою TaskFlow.", false],
-                    ["Основи TypeScript: типи, інтерфейси, класи", "Створи модель <code>Task</code> з інтерфейсом {id, title, description, status}.", false]
-                ]
-            },
-            {
-                week: "Тиждень 2 — Зв’язування даних, події, динамічний контент", lessons: [
-                    ["Інтерполяція, прив’язка властивостей та атрибутів", "Виведи список тестових задач у шаблоні з *ngFor.", false],
-                    ["Обробка подій (Event Binding)", "Додай кнопку для зміни статусу задачі та оброби подію.", false],
-                    ["Двостороннє зв’язування (ngModel)", "Додай форму створення нової задачі з двостороннім зв’язуванням.", false],
-                    ["Сигнали в Angular 19", "Заміни локальний стан на Signals для зберігання задач.", false],
-                    ["Практика", "Реалізуй додавання задач у список із формою та сигналами.", false]
-                ]
-            },
-            {
-                week: "Тиждень 3 — Компоненти, Input/Output, комунікація", lessons: [
-                    ["Передача даних у компонент (Input)", "Передай задачу у дочірній компонент <code>TaskItemComponent</code>.", false],
-                    ["Відправлення подій нагору (Output)", "Зроби видалення задачі через подію з дочірнього компонента.", false],
-                    ["Обчислювані властивості (Getters)", "Додай вивід кількості завершених задач.", false],
-                    ["Динамічне стилювання", "Познач завершені задачі зеленим кольором через клас binding.", false],
-                    ["Практика", "Створи компонент <code>TaskListComponent</code> і реалізуй повну взаємодію.", false]
-                ]
-            },
-            {
-                week: "Тиждень 4 — Форми, двостороннє зв’язування, Pipes", lessons: [
-                    ["Шаблонні форми Angular", "Додай форму для додавання задачі через шаблонну форму.", false],
-                    ["Валідація форм", "Додай обов’язковість полів назви та опису.", false],
-                    ["Pipes — форматування даних", "Додай pipe для форматування тексту (обрізання опису).", false],
-                    ["Кастомні Pipes", "Створи власний pipe для фільтрації завершених задач.", false],
-                    ["Практика", "Реалізуй фільтр 'Показати лише активні задачі'.", false]
-                ]
-            },
-            {
-                week: "Тиждень 5 — Сервіси та Dependency Injection", lessons: [
-                    ["Що таке сервіс та як його створити", "Створи <code>TaskService</code> для управління задачами.", false],
-                    ["Dependency Injection", "Інжектуй сервіс у компонент TaskListComponent.", false],
-                    ["Сигнали у сервісах", "Перенеси логіку сигналів у сервіс.", false],
-                    ["Використання localStorage", "Збережи задачі у localStorage через сервіс.", false],
-                    ["Практика", "Перевір збереження задач після перезавантаження сторінки.", false]
-                ]
-            },
-            {
-                week: "Тиждень 6 — Модулі, архітектура, структура проєкту", lessons: [
-                    ["Що таке модулі (NgModule)", "Створи <code>TaskModule</code> і перенеси туди компоненти задач.", false],
-                    ["SharedModule", "Винеси спільні компоненти та пайпи у спільний модуль.", false],
-                    ["Структура директорій", "Розклади код за фічами (core, shared, features).", false],
-                    ["Оптимізація імпортів", "Використай Standalone Components для деяких елементів.", false],
-                    ["Практика", "Онови структуру проєкту згідно з найкращими практиками.", false]
-                ]
-            },
-            {
-                week: "Тиждень 7 — Директиви, життєвий цикл компонентів", lessons: [
-                    ["Кастомні директиви", "Створи директиву для підсвічування активної задачі.", false],
-                    ["Життєвий цикл компонентів", "Використай ngOnInit для ініціалізації даних із localStorage.", false],
-                    ["ViewChild і доступ до DOM", "Отримай посилання на елемент списку задач.", false],
-                    ["HostListener та HostBinding", "Додай анімацію при наведенні на задачу.", false],
-                    ["Практика", "Додай логіку автозбереження задач при зміні стану.", false]
-                ]
-            },
-            {
-                week: "Тиждень 8 — Оптимізація, OnPush, AsyncPipe, фінал", lessons: [
-                    ["Change Detection та OnPush стратегія", "Переведи компонент списку задач на OnPush.", false],
-                    ["AsyncPipe", "Використай AsyncPipe для відображення даних сервісу.", false],
-                    ["Рефакторинг застосунку", "Перевір типи, перейменуй змінні, прибери дублікати коду.", false],
-                    ["Деплой", "Збери застосунок через ng build і завантаж на GitHub Pages.", false],
-                    ["Підсумок", "Опиши в README основні здобуті навички.", false]
-                ]
+        (function () {
+            const STORAGE_KEY = 'ts-ng-course-progress';
+            const checkboxes = Array.from(document.querySelectorAll('.item-checkbox'));
+            const fill = document.getElementById('progress-fill');
+            const percentEl = document.getElementById('progress-percent');
+
+            function loadProgress() {
+                try {
+                    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                    checkboxes.forEach(cb => {
+                        if (saved[cb.dataset.id]) {
+                            cb.checked = true;
+                        }
+                    });
+                } catch (e) {
+                    console.warn('Не вдалося прочитати прогрес з localStorage', e);
+                }
+                updateUI();
             }
-        ];
 
-        /* ===== РЕНДЕР ===== */
-        function loadCourse() {
-            const container = document.getElementById('course'); container.innerHTML = '';
-            course.forEach((week, i) => {
-                const wId = `week-${i}`;
-                const wDone = localStorage.getItem(wId) === '1';
-                const weekEl = document.createElement('div');
-                weekEl.className = 'week' + (wDone ? ' done' : '');
-                weekEl.innerHTML = `<h3>${week.week}</h3>`;
-                week.lessons.forEach((l, j) => {
-                    const id = `w${i}-l${j}`;
-                    const stored = localStorage.getItem(id) === '1';
-                    const done = stored || l[2] === true;
-                    const lesson = document.createElement('div');
-                    lesson.className = 'lesson' + (done ? ' done' : '');
-                    lesson.innerHTML = `<input type="checkbox" id="${id}" ${done ? 'checked' : ''}
-        onchange="toggleLesson('${id}',${i},${j})"><label for="${id}">${l[0]}</label>`;
-                    const task = document.createElement('div');
-                    task.className = 'task'; task.innerHTML = `<b>Завдання:</b> ${l[1]}`;
-                    weekEl.append(lesson, task);
-                    // обновим массив текущим состоянием
-                    week.lessons[j][2] = done;
+            function saveProgress() {
+                const data = {};
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        data[cb.dataset.id] = true;
+                    }
                 });
-                container.appendChild(weekEl);
-            });
-            updateProgress();
-        }
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                } catch (e) {
+                    console.warn('Не вдалося зберегти прогрес у localStorage', e);
+                }
+            }
 
-        /* ===== ЛОГІКА ПРОГРЕСУ ===== */
-        function toggleLesson(id, i, j) {
-            const cb = document.getElementById(id);
-            const row = cb.closest('.lesson');
-            const done = cb.checked;
-            row.classList.toggle('done', done);
-            localStorage.setItem(id, done ? '1' : '0');
-            course[i].lessons[j][2] = done;
-            updateProgress();
-        }
-        function updateProgress() {
-            let total = 0, done = 0;
-            course.forEach(w => w.lessons.forEach(l => { total++; if (l[2]) done++; }));
-            const percent = Math.round(done / total * 100);
-            document.getElementById('progressFill').style.width = percent + '%';
-            document.getElementById('status').textContent = `Пройдено: ${percent}%`;
-        }
-        function resetProgress() {
-            if (!confirm('Скинути прогрес?')) return;
-            course.forEach(w => w.lessons.forEach(l => l[2] = false));
-            localStorage.clear(); loadCourse();
-        }
-        window.addEventListener('load', loadCourse);
+            function updateUI() {
+                const total = checkboxes.length;
+                const done = checkboxes.filter(cb => cb.checked).length;
+                const percent = total ? Math.round((done / total) * 100) : 0;
+                fill.style.width = percent + '%';
+                percentEl.textContent = percent + '%';
+
+                checkboxes.forEach(cb => {
+                    const item = cb.closest('.item');
+                    if (item) {
+                        item.classList.toggle('completed', cb.checked);
+                    }
+                });
+            }
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    saveProgress();
+                    updateUI();
+                });
+            });
+
+            loadProgress();
+        })();
     </script>
 </body>
 
